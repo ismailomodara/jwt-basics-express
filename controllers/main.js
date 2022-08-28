@@ -20,25 +20,11 @@ const login = async (req, res) => {
 }
 
 const dashboard = async (req, res) => {
-    const auth = req.headers.authorization;
-
-    if(!auth || !auth.startsWith('Bearer')) {
-        throw new CustomAPIError('No Token', 401)
-    }
-
-    const token = auth.split(' ')[1]
-
-    try {
-        const decode = jwt.verify(token, process.env.JWT_SECRET);
-        const randomNum = Math.floor(Math.random() * 100);
-        return res.status(200).json({
-            ...decode,
-            message: randomNum
-        })
-    } catch (error) {
-        throw new CustomAPIError('Unauthorized', 401)
-    }
-
+    const randomNum = Math.floor(Math.random() * 100);
+    return res.status(200).json({
+        ...req.user,
+        message: randomNum
+    })
 }
 
 module.exports = { login, dashboard }
